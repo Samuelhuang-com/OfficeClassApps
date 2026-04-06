@@ -18,7 +18,8 @@ import {
   ExternalLink,
   Info,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Menu
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MODULES, Module, Lesson } from './constants';
@@ -40,7 +41,8 @@ const Header = ({
   onGoHome, 
   onGoModule, 
   onOpenSearch, 
-  onToggleChat 
+  onToggleChat,
+  onToggleSidebar
 }: { 
   currentView: View;
   currentModule: number;
@@ -49,6 +51,7 @@ const Header = ({
   onGoModule: (mi: number) => void;
   onOpenSearch: () => void;
   onToggleChat: () => void;
+  onToggleSidebar: () => void;
 }) => {
   const mod = MODULES[currentModule];
   
@@ -57,23 +60,20 @@ const Header = ({
   const totalFuncs = new Set(MODULES.flatMap(m => m.funcs)).size;
   
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-green-dark h-16 px-6 flex items-center border-b border-white/10 shadow-lg">
-      <div className="flex items-center gap-4 flex-1 min-w-0">
-        <span 
-          className="text-white font-serif text-lg font-bold cursor-pointer whitespace-nowrap shrink-0 border-r border-white/15 pr-4 mr-4 hidden sm:block"
-          onClick={onGoHome}
-        >
-          Excel<span className="text-amber-brand">課程</span> — 完整教學
-        </span>
+    <nav className="shrink-0 bg-green-dark h-16 px-4 sm:px-6 flex items-center border-b border-white/10 shadow-lg z-30 relative">
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        <button className="md:hidden text-white/80 hover:text-white p-1 shrink-0" onClick={onToggleSidebar}>
+          <Menu className="w-5 h-5" />
+        </button>
         
         {currentView === 'home' ? (
-          <div className="hidden md:flex items-center gap-6">
-            <div className="overflow-hidden">
+          <div className="flex items-center gap-6 min-w-0">
+            <div className="overflow-hidden hidden sm:block">
               <div className="text-white text-sm font-semibold truncate leading-tight">Excel 基礎到進階完整教學課程</div>
               <div className="text-white/55 text-[11px] truncate mt-0.5">從零開始系統化學習，告別死記硬背，職場效率大升級</div>
             </div>
             
-            <div className="hidden lg:flex items-center border border-white/20 rounded-lg bg-white/5 ml-4">
+            <div className="hidden lg:flex items-center border border-white/20 rounded-lg bg-white/5 sm:ml-4">
               <div className="px-4 py-1.5 text-center border-r border-white/20">
                 <div className="text-white font-serif font-bold text-lg leading-none">{totalModules}</div>
                 <div className="text-white/60 text-[10px] mt-1">大模組</div>
@@ -90,8 +90,8 @@ const Header = ({
           </div>
         ) : (
           <div className="flex items-center gap-2 text-white/60 text-sm overflow-hidden">
-            <span className="hover:text-white cursor-pointer whitespace-nowrap" onClick={onGoHome}>首頁</span>
-            <span className="opacity-40 shrink-0">›</span>
+            <span className="hover:text-white cursor-pointer whitespace-nowrap hidden sm:inline" onClick={onGoHome}>首頁</span>
+            <span className="opacity-40 shrink-0 hidden sm:inline">›</span>
             <span 
               className={`truncate ${currentView === 'module' ? 'text-white font-medium' : 'hover:text-white cursor-pointer'}`}
               onClick={() => onGoModule(currentModule)}
@@ -110,9 +110,9 @@ const Header = ({
         )}
       </div>
 
-      <div className="flex items-center gap-3 ml-4 shrink-0">
+      <div className="flex items-center gap-2 sm:gap-3 ml-2 sm:ml-4 shrink-0">
         <button 
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white/90 text-sm font-medium hover:bg-white/20 transition-all"
+          className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white/90 text-sm font-medium hover:bg-white/20 transition-all"
           onClick={onOpenSearch}
         >
           <SearchIcon className="w-4 h-4" />
@@ -120,7 +120,7 @@ const Header = ({
           <span className="hidden lg:inline text-[10px] bg-white/15 px-1.5 py-0.5 rounded ml-1">Ctrl+K</span>
         </button>
         <button 
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white/90 text-sm font-medium hover:bg-white/20 transition-all"
+          className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white/90 text-sm font-medium hover:bg-white/20 transition-all"
           onClick={onToggleChat}
         >
           <Bot className="w-4 h-4" />
@@ -128,6 +128,69 @@ const Header = ({
         </button>
       </div>
     </nav>
+  );
+};
+
+const Sidebar = ({ 
+  currentView, 
+  currentModule, 
+  currentLesson, 
+  onGoHome, 
+  onGoModule, 
+  onGoCard,
+  onCloseMobile
+}: {
+  currentView: View;
+  currentModule: number;
+  currentLesson: number;
+  onGoHome: () => void;
+  onGoModule: (mi: number) => void;
+  onGoCard: (mi: number, li: number) => void;
+  onCloseMobile?: () => void;
+}) => {
+  return (
+    <>
+      <div className="h-16 flex items-center px-6 border-b border-app-border shrink-0 bg-green-dark">
+        <span 
+          className="text-white font-serif text-lg font-bold cursor-pointer whitespace-nowrap"
+          onClick={() => { onGoHome(); onCloseMobile?.(); }}
+        >
+          Excel<span className="text-amber-brand">課程</span>
+        </span>
+      </div>
+      <div className="flex-1 overflow-y-auto py-4 custom-scrollbar">
+        <div className="px-4 mb-4">
+          <button 
+            onClick={() => { onGoHome(); onCloseMobile?.(); }}
+            className={`w-full text-left px-3 py-2 rounded-lg text-sm font-bold transition-colors ${currentView === 'home' ? 'bg-green-light text-green-dark' : 'text-app-text hover:bg-app-bg'}`}
+          >
+            課程總覽
+          </button>
+        </div>
+        {MODULES.map((m, mi) => (
+          <div key={m.id} className="mb-4">
+            <div 
+              className={`px-4 py-2 mx-2 rounded-lg cursor-pointer flex items-center gap-2 transition-colors ${currentView === 'module' && currentModule === mi ? 'bg-green-light/50 text-green-dark font-bold' : 'hover:bg-app-bg'}`}
+              onClick={() => { onGoModule(mi); onCloseMobile?.(); }}
+            >
+              <span className="text-base shrink-0">{m.emoji}</span>
+              <span className="text-sm font-bold truncate">M{m.id} {m.title.split('：')[0]}</span>
+            </div>
+            <div className="mt-1 space-y-0.5">
+              {m.lessons.map((l, li) => (
+                <div 
+                  key={l.id}
+                  className={`pl-10 pr-4 py-1.5 mx-2 rounded-lg cursor-pointer text-xs truncate transition-colors ${currentView === 'card' && currentModule === mi && currentLesson === li ? 'bg-green-dark text-white font-medium' : 'text-app-muted hover:bg-app-bg hover:text-app-text'}`}
+                  onClick={() => { onGoCard(mi, li); onCloseMobile?.(); }}
+                >
+                  {l.id} {l.title}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 
@@ -141,7 +204,7 @@ const HomeView = ({ onGoModule }: { onGoModule: (mi: number) => void }) => {
   const counts = [0, 1, 2, 3].map(lv => MODULES.filter(m => m.lvIdx === lv).length);
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-10 pt-24">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
       <div className="flex flex-wrap items-center gap-2 mb-8">
         <span className="text-xs font-bold text-app-muted uppercase tracking-wider mr-2">篩選等級</span>
         <button 
@@ -225,16 +288,16 @@ const ModuleView = ({
   const [openLesson, setOpenLesson] = useState<number | null>(null);
 
   return (
-    <div className="pt-16">
-      <div className="bg-white border-b border-app-border px-10 py-12">
-        <div className="max-w-4xl mx-auto flex gap-6 items-start">
+    <div className="">
+      <div className="bg-white border-b border-app-border px-6 sm:px-10 py-8 sm:py-12">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
           <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0 ${m.chipCls}`}>
             {m.emoji}
           </div>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <h2 className="text-3xl font-serif font-bold text-app-text mb-2">M{m.id}. {m.title}</h2>
             <p className="text-sm text-app-muted max-w-2xl leading-relaxed">{m.desc}</p>
-            <div className="flex gap-2 mt-4">
+            <div className="flex flex-wrap gap-2 mt-4">
               <span className="text-xs px-3 py-1 rounded-full bg-app-bg border border-app-border text-app-muted">{m.level}</span>
               <span className="text-xs px-3 py-1 rounded-full bg-app-bg border border-app-border text-app-muted">{m.lessons.length} 堂課</span>
               {m.funcs.length > 0 && (
@@ -255,10 +318,10 @@ const ModuleView = ({
               <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 ${m.chipCls}`}>
                 {l.id}
               </div>
-              <div className="flex-1">
-                <div className="text-sm font-semibold">{l.title}</div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-semibold truncate">{l.title}</div>
                 {l.funcs.length > 0 && (
-                  <div className="flex gap-1 mt-1">
+                  <div className="flex flex-wrap gap-1 mt-1">
                     {l.funcs.map(f => (
                       <span key={f} className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${m.chipCls}`}>
                         {f}
@@ -310,7 +373,7 @@ const ModuleView = ({
                       <div className="bg-white p-4 col-span-full">
                         <h5 className="text-[10px] font-bold text-app-muted uppercase tracking-wider mb-3">一句話理解</h5>
                         <p className="text-sm font-medium text-app-text leading-relaxed mb-3">{l.tagline}</p>
-                        <div className="bg-green-dark text-green-light font-mono text-sm p-3 rounded-lg whitespace-pre-wrap">
+                        <div className="bg-green-dark text-green-light font-mono text-sm p-3 rounded-lg whitespace-pre-wrap break-words">
                           {l.syntax}
                         </div>
                       </div>
@@ -349,8 +412,8 @@ const CardView = ({
   const progress = Math.round(((lessonIdx + 1) / total) * 100);
 
   return (
-    <div className="pt-16 min-h-screen flex flex-col">
-      <div className="bg-app-bg border-b border-app-border px-6 py-4 sticky top-16 z-40">
+    <div className="min-h-screen flex flex-col">
+      <div className="bg-app-bg border-b border-app-border px-6 py-4 sticky top-0 z-40">
         <div className="max-w-3xl mx-auto flex items-center gap-4">
           <span className="text-xs text-app-muted whitespace-nowrap shrink-0">
             M{mod.id} · {mod.emoji} {mod.title.split('：')[0]}
@@ -383,7 +446,7 @@ const CardView = ({
               <span className="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{mod.level}</span>
               <span className="text-xl ml-auto">{mod.emoji}</span>
             </div>
-            <h1 className="text-white text-5xl font-serif font-bold tracking-tight mb-2">
+            <h1 className="text-white text-4xl sm:text-5xl font-serif font-bold tracking-tight mb-2 break-words">
               {l.funcs.length > 0 ? l.funcs[0] : l.title.split(' ')[0]}
             </h1>
             <div className="text-white/80 text-base">{l.title}</div>
@@ -406,7 +469,7 @@ const CardView = ({
               <div className="flex items-center gap-2 text-[10px] font-bold text-app-muted uppercase tracking-wider mb-3">
                 <ArchitectureIcon className="w-3.5 h-3.5" /> 語法
               </div>
-              <div className="bg-green-dark text-green-light font-mono text-sm p-4 rounded-xl leading-relaxed">
+              <div className="bg-green-dark text-green-light font-mono text-sm p-4 rounded-xl leading-relaxed overflow-x-auto whitespace-pre">
                 {l.syntax.split('\n').map((line, i) => (
                   <div key={i} dangerouslySetInnerHTML={{ 
                     __html: line.replace(/（.+?）/g, s => `<span class="text-amber-200">${s}</span>`) 
@@ -452,7 +515,7 @@ const CardView = ({
                 )}
 
                 <div className="flex flex-wrap items-center gap-3">
-                  <div className="bg-green-dark text-green-light font-mono text-xs px-4 py-2 rounded-lg">
+                  <div className="bg-green-dark text-green-light font-mono text-xs px-4 py-2 rounded-lg break-all">
                     {l.ex.formula.split('\n')[0]}
                   </div>
                   {l.ex.result && (
@@ -500,26 +563,26 @@ const CardView = ({
             </div>
           </div>
 
-          <div className="bg-app-bg border-t border-app-border p-4 flex justify-between items-center">
+          <div className="bg-app-bg border-t border-app-border p-4 flex justify-between items-center gap-2">
             <button 
               disabled={lessonIdx === 0}
               onClick={() => onNav(-1)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-app-border bg-white text-sm font-medium hover:bg-green-dark hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
+              className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg border border-app-border bg-white text-sm font-medium hover:bg-green-dark hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
             >
-              <ChevronLeft className="w-4 h-4" /> 上一堂
+              <ChevronLeft className="w-4 h-4" /> <span className="hidden sm:inline">上一堂</span>
             </button>
             <button 
               onClick={onBackToModule}
-              className="px-4 py-2 rounded-lg border border-app-border bg-white text-sm font-medium hover:bg-green-dark hover:text-white transition-all"
+              className="px-3 sm:px-4 py-2 rounded-lg border border-app-border bg-white text-sm font-medium hover:bg-green-dark hover:text-white transition-all"
             >
               返回模組
             </button>
             <button 
               disabled={lessonIdx === total - 1}
               onClick={() => onNav(1)}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-app-border bg-white text-sm font-medium hover:bg-green-dark hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
+              className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg border border-app-border bg-white text-sm font-medium hover:bg-green-dark hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all"
             >
-              下一堂 <ChevronRight className="w-4 h-4" />
+              <span className="hidden sm:inline">下一堂</span> <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </motion.div>
@@ -545,6 +608,7 @@ export default function App() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isKeyModalOpen, setIsKeyModalOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -661,29 +725,76 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-app-bg">
-      <Header 
-        currentView={view}
-        currentModule={currentModule}
-        currentLesson={currentLesson}
-        onGoHome={handleGoHome}
-        onGoModule={handleGoModule}
-        onOpenSearch={() => setIsSearchOpen(true)}
-        onToggleChat={() => setIsChatOpen(!isChatOpen)}
-      />
+    <div className="flex h-screen bg-app-bg font-sans text-app-text overflow-hidden selection:bg-green-brand/20">
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-app-border h-full z-40 shrink-0">
+        <Sidebar 
+          currentView={view}
+          currentModule={currentModule}
+          currentLesson={currentLesson}
+          onGoHome={handleGoHome}
+          onGoModule={handleGoModule}
+          onGoCard={(mi, li) => { setCurrentModule(mi); handleGoCard(li); }}
+        />
+      </aside>
 
-      <main className="pb-20">
-        {view === 'home' && <HomeView onGoModule={handleGoModule} />}
-        {view === 'module' && <ModuleView moduleIdx={currentModule} onGoCard={handleGoCard} />}
-        {view === 'card' && (
-          <CardView 
-            moduleIdx={currentModule} 
-            lessonIdx={currentLesson} 
-            onNav={handleNavCard}
-            onBackToModule={() => setView('module')}
-          />
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              onClick={() => setIsSidebarOpen(false)}
+            />
+            <motion.aside 
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
+              className="fixed inset-y-0 left-0 w-64 bg-white border-r border-app-border z-50 flex flex-col md:hidden shadow-2xl"
+            >
+              <Sidebar 
+                currentView={view}
+                currentModule={currentModule}
+                currentLesson={currentLesson}
+                onGoHome={handleGoHome}
+                onGoModule={handleGoModule}
+                onGoCard={(mi, li) => { setCurrentModule(mi); handleGoCard(li); }}
+                onCloseMobile={() => setIsSidebarOpen(false)}
+              />
+            </motion.aside>
+          </>
         )}
-      </main>
+      </AnimatePresence>
+
+      <div className="flex-1 flex flex-col min-w-0 h-full relative">
+        <Header 
+          currentView={view}
+          currentModule={currentModule}
+          currentLesson={currentLesson}
+          onGoHome={handleGoHome}
+          onGoModule={handleGoModule}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          onToggleChat={() => setIsChatOpen(!isChatOpen)}
+          onToggleSidebar={() => setIsSidebarOpen(true)}
+        />
+
+        <main className="flex-1 overflow-y-auto pb-20 custom-scrollbar">
+          {view === 'home' && <HomeView onGoModule={handleGoModule} />}
+          {view === 'module' && <ModuleView moduleIdx={currentModule} onGoCard={handleGoCard} />}
+          {view === 'card' && (
+            <CardView 
+              moduleIdx={currentModule} 
+              lessonIdx={currentLesson} 
+              onNav={handleNavCard}
+              onBackToModule={() => setView('module')}
+            />
+          )}
+        </main>
+      </div>
 
       {/* Search Overlay */}
       <AnimatePresence>
@@ -759,7 +870,7 @@ export default function App() {
 
       {/* Chat Panel */}
       <div 
-        className={`fixed bottom-0 right-6 z-[90] w-full max-w-[380px] bg-white rounded-t-2xl shadow-2xl border border-app-border flex flex-col transition-all duration-300 ease-in-out ${isChatOpen ? 'h-[540px]' : 'h-0 overflow-hidden'}`}
+        className={`fixed bottom-0 right-0 sm:right-6 z-[90] w-full sm:max-w-[380px] bg-white sm:rounded-t-2xl shadow-2xl border border-app-border flex flex-col transition-all duration-300 ease-in-out ${isChatOpen ? 'h-[100dvh] sm:h-[540px]' : 'h-0 overflow-hidden'}`}
       >
         <div className="bg-green-dark p-4 flex items-center gap-3 shrink-0">
           <div className="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center text-white">
