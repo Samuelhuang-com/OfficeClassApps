@@ -15,6 +15,21 @@ export interface Lesson {
       rows: string[][];
     };
   };
+  parameters?: {
+    name: string;
+    desc: string;
+    type: string;
+    required: boolean;
+  }[];
+  hotelScenario?: {
+    desc: string;
+    formula: string;
+    result: string;
+    table?: {
+      cols: string[];
+      rows: string[][];
+    };
+  };
   keys: string[];
 }
 
@@ -174,6 +189,26 @@ export const MODULES: Module[] = [
             rows: [["銷售部", "張三", "25000"], ["人事部", "李四", "22000"], ["銷售部", "王五", "28000"], ["銷售部", "趙六", "22000"], ["結果", "", "→ 75000"]]
           }
         },
+        parameters: [
+          { name: "條件範圍 (Range)", desc: "要進行條件判斷的儲存格範圍。", type: "範圍", required: true },
+          { name: "條件 (Criteria)", desc: "用來決定哪些儲存格將被加總的條件，可以是數字、表達式、儲存格參照或文字。", type: "文字/數字/邏輯", required: true },
+          { name: "求和範圍 (Sum_range)", desc: "實際要加總的儲存格。如果省略，則加總「條件範圍」中的儲存格。", type: "範圍", required: false }
+        ],
+        hotelScenario: {
+          desc: "計算「豪華客房」的總營收",
+          formula: '=SUMIF(B:B,"豪華客房",E:E)',
+          result: "15000",
+          table: {
+            cols: ["訂單號", "房型(B)", "入住天數", "單價", "總價(E)"],
+            rows: [
+              ["R001", "標準客房", "2", "2000", "4000"],
+              ["R002", "豪華客房", "1", "5000", "5000"],
+              ["R003", "豪華客房", "2", "5000", "10000"],
+              ["R004", "家庭套房", "1", "8000", "8000"],
+              ["→結果", "豪華客房營收", "", "", "→ 15000"]
+            ]
+          }
+        },
         keys: ['條件文字加雙引號："銷售部"', '邏輯條件也加引號：">5000"', "條件和求和是同一列時第3參數可省"]
       },
       {
@@ -225,6 +260,26 @@ export const MODULES: Module[] = [
           table: {
             cols: ["A(飲品)", "B(杯型)", "C(價格)"],
             rows: [["美式", "中杯", "20"], ["拿鐵", "大杯", "25"], ["摩卡", "超大杯", "30"], ["→查拿鐵", "", "→ 25"]]
+          }
+        },
+        parameters: [
+          { name: "找誰 (lookup_value)", desc: "要在表格第一欄中搜尋的值。", type: "任意", required: true },
+          { name: "在哪裡找 (table_array)", desc: "包含資料的儲存格範圍。搜尋值必須位於此範圍的第一欄。", type: "範圍", required: true },
+          { name: "第幾列 (col_index_num)", desc: "要傳回的值位於 table_array 中的欄號（從 1 開始）。", type: "數字", required: true },
+          { name: "精確度 (range_lookup)", desc: "指定要尋找完全符合 (0/FALSE) 還是大約符合 (1/TRUE) 的值。", type: "布林值/數字", required: false }
+        ],
+        hotelScenario: {
+          desc: "根據「房號」查詢住客姓名與退房狀態",
+          formula: '=VLOOKUP("802",A:D,3,0)',
+          result: "王大明",
+          table: {
+            cols: ["房號(A)", "房型(B)", "住客姓名(C)", "狀態(D)"],
+            rows: [
+              ["801", "標準客房", "陳小華", "已退房"],
+              ["802", "豪華客房", "王大明", "入住中"],
+              ["803", "家庭套房", "林美麗", "預訂"],
+              ["→查802", "", "→ 王大明", ""]
+            ]
           }
         },
         keys: ["口訣：找誰，在哪找，第幾列，要精確(0)", "第4參數一定填0避免模糊匹配錯誤", "只能向右找，想向左找改用XLOOKUP"]

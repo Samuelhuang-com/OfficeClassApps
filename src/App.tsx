@@ -481,6 +481,38 @@ const CardView = ({
                   }} />
                 ))}
               </div>
+
+              {l.parameters && l.parameters.length > 0 && (
+                <div className="mt-6">
+                  <div className="text-[10px] font-bold text-app-muted uppercase tracking-wider mb-3">參數說明</div>
+                  <div className="overflow-x-auto border border-app-border rounded-lg">
+                    <table className="w-full text-xs border-collapse">
+                      <thead>
+                        <tr className="bg-app-bg">
+                          <th className="px-3 py-2 text-left font-bold text-app-muted border-r border-app-border">參數名稱</th>
+                          <th className="px-3 py-2 text-left font-bold text-app-muted border-r border-app-border">資料型別</th>
+                          <th className="px-3 py-2 text-left font-bold text-app-muted border-r border-app-border">必填/選填</th>
+                          <th className="px-3 py-2 text-left font-bold text-app-muted">用途說明</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {l.parameters.map((p, i) => (
+                          <tr key={i} className="border-t border-app-border hover:bg-app-bg/50">
+                            <td className="px-3 py-2 border-r border-app-border font-mono font-bold text-green-dark">{p.name}</td>
+                            <td className="px-3 py-2 border-r border-app-border text-app-muted">{p.type}</td>
+                            <td className="px-3 py-2 border-r border-app-border">
+                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${p.required ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'}`}>
+                                {p.required ? '必填' : '選填'}
+                              </span>
+                            </td>
+                            <td className="px-3 py-2 text-app-text">{p.desc}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
 
             {l.ex && (
@@ -530,6 +562,60 @@ const CardView = ({
                       <ArrowRight className="w-4 h-4 text-app-muted" />
                       <div className="bg-green-light text-green-dark font-bold text-sm px-4 py-1.5 rounded-lg">
                         {l.ex.result}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {l.hotelScenario && (
+              <div className="p-6 border-b border-app-border bg-amber-50/30">
+                <div className="flex items-center gap-2 text-[10px] font-bold text-amber-700 uppercase tracking-wider mb-3">
+                  <ExternalLink className="w-3.5 h-3.5" /> 飯店實用情境
+                </div>
+                <p className="text-xs text-app-muted mb-4">{l.hotelScenario.desc}</p>
+                
+                {l.hotelScenario.table && (
+                  <div className="overflow-x-auto border border-amber-200 rounded-lg mb-4">
+                    <table className="w-full text-xs border-collapse">
+                      <thead>
+                        <tr className="bg-amber-100/50">
+                          {l.hotelScenario.table.cols.map((c, i) => (
+                            <th key={i} className="px-3 py-2 text-left font-bold text-amber-900 border-r border-amber-200 last:border-0">{c}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {l.hotelScenario.table.rows.map((row, ri) => (
+                          <tr key={ri} className="border-t border-amber-200 hover:bg-amber-50">
+                            {row.map((cell, ci) => (
+                              <td key={ci} className={`px-3 py-2 border-r border-amber-200 last:border-0 ${
+                                ri === l.hotelScenario!.table!.rows.length - 1 || cell.startsWith('→') 
+                                  ? 'bg-amber-100 font-bold text-amber-900' 
+                                  : 'text-app-text'
+                              }`}>
+                                {cell}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                <div className="mt-4">
+                  <CodeEditor 
+                    initialCode={l.hotelScenario.formula} 
+                    readOnly={false} 
+                    title="情境公式" 
+                  />
+                  {l.hotelScenario.result && (
+                    <div className="flex items-center gap-3 mt-3">
+                      <ArrowRight className="w-4 h-4 text-amber-700" />
+                      <div className="bg-amber-100 text-amber-900 font-bold text-sm px-4 py-1.5 rounded-lg">
+                        {l.hotelScenario.result}
                       </div>
                     </div>
                   )}
