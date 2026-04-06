@@ -67,25 +67,10 @@ const Header = ({
         </button>
         
         {currentView === 'home' ? (
-          <div className="flex items-center gap-6 min-w-0">
+          <div className="flex items-center gap-4 min-w-0">
             <div className="overflow-hidden hidden sm:block">
               <div className="text-white text-sm font-semibold truncate leading-tight">Excel 基礎到進階完整教學課程</div>
               <div className="text-white/55 text-[11px] truncate mt-0.5">從零開始系統化學習，告別死記硬背，職場效率大升級</div>
-            </div>
-            
-            <div className="hidden lg:flex items-center border border-white/20 rounded-lg bg-white/5 sm:ml-4">
-              <div className="px-4 py-1.5 text-center border-r border-white/20">
-                <div className="text-white font-serif font-bold text-lg leading-none">{totalModules}</div>
-                <div className="text-white/60 text-[10px] mt-1">大模組</div>
-              </div>
-              <div className="px-4 py-1.5 text-center border-r border-white/20">
-                <div className="text-white font-serif font-bold text-lg leading-none">{totalLessons}</div>
-                <div className="text-white/60 text-[10px] mt-1">單元</div>
-              </div>
-              <div className="px-4 py-1.5 text-center">
-                <div className="text-white font-serif font-bold text-lg leading-none">{totalFuncs}</div>
-                <div className="text-white/60 text-[10px] mt-1">核心函數</div>
-              </div>
             </div>
           </div>
         ) : (
@@ -108,9 +93,34 @@ const Header = ({
             )}
           </div>
         )}
+
+        <button 
+          className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white/90 text-sm font-medium hover:bg-white/20 transition-all shrink-0 ml-1 sm:ml-2"
+          onClick={onToggleChat}
+        >
+          <Bot className="w-4 h-4" />
+          <span className="hidden sm:inline">問 AI</span>
+        </button>
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3 ml-2 sm:ml-4 shrink-0">
+        {currentView === 'home' && (
+          <div className="hidden lg:flex items-center border border-white/20 rounded-lg bg-white/5">
+            <div className="px-4 py-1.5 text-center border-r border-white/20">
+              <div className="text-white font-serif font-bold text-lg leading-none">{totalModules}</div>
+              <div className="text-white/60 text-[10px] mt-1">大模組</div>
+            </div>
+            <div className="px-4 py-1.5 text-center border-r border-white/20">
+              <div className="text-white font-serif font-bold text-lg leading-none">{totalLessons}</div>
+              <div className="text-white/60 text-[10px] mt-1">單元</div>
+            </div>
+            <div className="px-4 py-1.5 text-center">
+              <div className="text-white font-serif font-bold text-lg leading-none">{totalFuncs}</div>
+              <div className="text-white/60 text-[10px] mt-1">核心函數</div>
+            </div>
+          </div>
+        )}
+
         <button 
           className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white/90 text-sm font-medium hover:bg-white/20 transition-all"
           onClick={onOpenSearch}
@@ -118,13 +128,6 @@ const Header = ({
           <SearchIcon className="w-4 h-4" />
           <span className="hidden sm:inline">搜尋</span>
           <span className="hidden lg:inline text-[10px] bg-white/15 px-1.5 py-0.5 rounded ml-1">Ctrl+K</span>
-        </button>
-        <button 
-          className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white/90 text-sm font-medium hover:bg-white/20 transition-all"
-          onClick={onToggleChat}
-        >
-          <Bot className="w-4 h-4" />
-          <span className="hidden sm:inline">問 AI</span>
         </button>
       </div>
     </nav>
@@ -395,6 +398,8 @@ const ModuleView = ({
   );
 };
 
+import { CodeEditor } from './components/CodeEditor';
+
 const CardView = ({ 
   moduleIdx, 
   lessonIdx, 
@@ -514,17 +519,19 @@ const CardView = ({
                   </div>
                 )}
 
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="bg-green-dark text-green-light font-mono text-xs px-4 py-2 rounded-lg break-all">
-                    {l.ex.formula.split('\n')[0]}
-                  </div>
+                <div className="mt-4">
+                  <CodeEditor 
+                    initialCode={l.ex.formula} 
+                    readOnly={false} 
+                    title="實戰公式" 
+                  />
                   {l.ex.result && (
-                    <>
+                    <div className="flex items-center gap-3 mt-3">
                       <ArrowRight className="w-4 h-4 text-app-muted" />
                       <div className="bg-green-light text-green-dark font-bold text-sm px-4 py-1.5 rounded-lg">
                         {l.ex.result}
                       </div>
-                    </>
+                    </div>
                   )}
                 </div>
               </div>
