@@ -1,0 +1,72 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+
+  --color-green-dark: #1b4332;
+  --color-green-mid: #2d6a4f;
+  --color-green-light: #d8f3dc;
+  --color-amber-brand: #e9a825;
+  --color-amber-light: #fef9ee;
+  --color-app-bg: #f7f6f2;
+  --color-surface: #ffffff;
+  --color-app-border: #e4e2dc;
+  --color-app-text: #1a1a18;
+  --color-app-muted: #6b6b63;
+}
+
+@layer base {
+  body {
+    @apply bg-app-bg text-app-text font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif font-bold;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.card-shadow {
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+}
+
+.glass-nav {
+  background: rgba(27, 67, 50, 0.95);
+  backdrop-filter: blur(8px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Module Level Colors */
+.lv-0 { background-color: #dbeafe; color: #1e40af; }
+.lv-1 { background-color: #dcfce7; color: #166534; }
+.lv-2 { background-color: #fef9c3; color: #92400e; }
+.lv-3 { background-color: #ede9fe; color: #5b21b6; }
+
+/* Module Chip Colors */
+.c1 { background-color: #dbeafe; color: #1e3a8a; }
+.c2 { background-color: #dcfce7; color: #14532d; }
+.c3 { background-color: #fef9c3; color: #78350f; }
+.c4 { background-color: #ede9fe; color: #4c1d95; }
+.c5 { background-color: #fce7f3; color: #831843; }
+.c6 { background-color: #ccfbf1; color: #134e4a; }
+.c7 { background-color: #ffedd5; color: #7c2d12; }
+.c8 { background-color: #e0e7ff; color: #3730a3; }
+.c9 { background-color: #fee2e2; color: #7f1d1d; }
+.c10 { background-color: #d1fae5; color: #064e3b; }
