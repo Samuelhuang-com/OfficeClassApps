@@ -52,6 +52,10 @@ const Header = ({
 }) => {
   const mod = MODULES[currentModule];
   
+  const totalModules = MODULES.length;
+  const totalLessons = MODULES.reduce((acc, m) => acc + m.lessons.length, 0);
+  const totalFuncs = new Set(MODULES.flatMap(m => m.funcs)).size;
+  
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-green-dark h-16 px-6 flex items-center border-b border-white/10 shadow-lg">
       <div className="flex items-center gap-4 flex-1 min-w-0">
@@ -63,9 +67,26 @@ const Header = ({
         </span>
         
         {currentView === 'home' ? (
-          <div className="hidden md:block overflow-hidden">
-            <div className="text-white text-sm font-semibold truncate leading-tight">Excel 基礎到進階完整教學課程</div>
-            <div className="text-white/55 text-[11px] truncate mt-0.5">從零開始系統化學習，告別死記硬背，職場效率大升級</div>
+          <div className="hidden md:flex items-center gap-6">
+            <div className="overflow-hidden">
+              <div className="text-white text-sm font-semibold truncate leading-tight">Excel 基礎到進階完整教學課程</div>
+              <div className="text-white/55 text-[11px] truncate mt-0.5">從零開始系統化學習，告別死記硬背，職場效率大升級</div>
+            </div>
+            
+            <div className="hidden lg:flex items-center border border-white/20 rounded-lg bg-white/5 ml-4">
+              <div className="px-4 py-1.5 text-center border-r border-white/20">
+                <div className="text-white font-serif font-bold text-lg leading-none">{totalModules}</div>
+                <div className="text-white/60 text-[10px] mt-1">大模組</div>
+              </div>
+              <div className="px-4 py-1.5 text-center border-r border-white/20">
+                <div className="text-white font-serif font-bold text-lg leading-none">{totalLessons}</div>
+                <div className="text-white/60 text-[10px] mt-1">單元</div>
+              </div>
+              <div className="px-4 py-1.5 text-center">
+                <div className="text-white font-serif font-bold text-lg leading-none">{totalFuncs}</div>
+                <div className="text-white/60 text-[10px] mt-1">核心函數</div>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="flex items-center gap-2 text-white/60 text-sm overflow-hidden">
