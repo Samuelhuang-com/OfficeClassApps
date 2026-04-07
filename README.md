@@ -73,12 +73,16 @@
    npm install
    ```
 
-2. 啟動開發伺服器：
+2. **啟動開發伺服器 (Development)**：
+   如果你想要在本地端開發並即時看到修改結果，請執行：
    ```bash
    npm run dev
    ```
+   執行後，終端機會顯示一個本地網址（通常是 `http://localhost:3000` 或 `http://localhost:5173`），在瀏覽器開啟即可。
 
-3. 建置正式環境版本：
+3. **建置與預覽正式環境版本 (Production)**：
+   如果你已經執行過 `npm run build` 完成打包，想要在本地端預覽打包後的正式版本，請執行：
    ```bash
-   npm run build
+   npm run build    # 建置靜態檔案 (若已執行過可跳過)
+   npm run preview  # 啟動本地預覽伺服器
    ```
