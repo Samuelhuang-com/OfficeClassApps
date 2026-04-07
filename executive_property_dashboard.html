@@ -1,0 +1,241 @@
+
+<style>
+  .db-root{font-family:var(--font-sans);color:var(--color-text-primary);padding:0;}
+  .db-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);}
+  .db-logo{font-size:15px;font-weight:500;letter-spacing:.01em;}
+  .db-logo span{color:#1D9E75;margin-right:6px;font-size:16px;}
+  .db-meta{font-size:12px;color:var(--color-text-secondary);}
+  .db-tabs{display:flex;gap:4px;padding:14px 24px 0;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);}
+  .db-tab{font-size:13px;padding:6px 16px;border-radius:6px 6px 0 0;cursor:pointer;color:var(--color-text-secondary);border:none;background:none;}
+  .db-tab.active{color:var(--color-text-primary);font-weight:500;border-bottom:2px solid #1D9E75;background:var(--color-background-secondary);}
+  .db-body{padding:20px 24px;background:var(--color-background-tertiary);min-height:600px;}
+  .kpi-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px;}
+  .kpi{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;}
+  .kpi-label{font-size:11px;color:var(--color-text-secondary);letter-spacing:.03em;margin-bottom:6px;}
+  .kpi-val{font-size:26px;font-weight:500;line-height:1;}
+  .kpi-delta{font-size:11px;margin-top:5px;display:flex;align-items:center;gap:4px;}
+  .up{color:#0F6E56;} .down{color:#993C1D;} .neu{color:var(--color-text-secondary);}
+  .arrow-up::before{content:"▲";font-size:8px;}
+  .arrow-down::before{content:"▼";font-size:8px;}
+  .charts-row{display:grid;grid-template-columns:3fr 2fr;gap:16px;margin-bottom:16px;}
+  .card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px 18px;}
+  .card-title{font-size:12px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px;}
+  .bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .exc-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px;}
+  .exc-row:last-child{border-bottom:none;}
+  .exc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .exc-prop{color:var(--color-text-secondary);font-size:11px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:500;}
+  .badge-red{background:#FCEBEB;color:#A32D2D;}
+  .badge-amber{background:#FAEEDA;color:#854F0B;}
+  .badge-green{background:#EAF3DE;color:#3B6D11;}
+  .prop-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:12px;}
+  .prop-label{width:48px;color:var(--color-text-secondary);text-align:right;flex-shrink:0;}
+  .bar-bg{flex:1;background:var(--color-background-tertiary);border-radius:3px;height:10px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:3px;}
+  .prop-pct{width:34px;font-size:12px;font-weight:500;text-align:right;}
+  .legend-row{display:flex;gap:16px;font-size:11px;color:var(--color-text-secondary);margin-bottom:10px;}
+  .legend-dot{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:4px;}
+</style>
+
+<div class="db-root">
+  <div class="db-header">
+    <div>
+      <div class="db-logo"><span>■</span>管理儀表板</div>
+      <div class="db-meta" style="margin-top:3px;">跨館營運 · 即時視圖</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:13px;font-weight:500;" id="db-date"></div>
+      <div class="db-meta">總管理處 · 執行長辦公室</div>
+    </div>
+  </div>
+
+  <div class="db-tabs">
+    <button class="db-tab active">本月總覽</button>
+    <button class="db-tab">跨館比較</button>
+    <button class="db-tab">工程追蹤</button>
+    <button class="db-tab">月報管理</button>
+  </div>
+
+  <div class="db-body">
+
+    <!-- KPI cards -->
+    <div class="kpi-row">
+      <div class="kpi">
+        <div class="kpi-label">工單結案率</div>
+        <div class="kpi-val" style="color:#0F6E56;">87<span style="font-size:16px;">%</span></div>
+        <div class="kpi-delta up"><span class="arrow-up"></span> 較上月 +4%</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">未結異常件數</div>
+        <div class="kpi-val" style="color:#993C1D;">23</div>
+        <div class="kpi-delta down"><span class="arrow-down"></span> 較上月 +7 件</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">月報準時率</div>
+        <div class="kpi-val" style="color:#1D9E75;">100<span style="font-size:16px;">%</span></div>
+        <div class="kpi-delta neu">連續 3 個月準時</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">KPI 達標館數</div>
+        <div class="kpi-val">4<span style="font-size:16px;color:var(--color-text-secondary);"> / 6</span></div>
+        <div class="kpi-delta down"><span class="arrow-down"></span> 較上月 -1 館</div>
+      </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="charts-row">
+      <div class="card">
+        <div class="card-title">異常件數月趨勢</div>
+        <div class="legend-row">
+          <span><span class="legend-dot" style="background:#1D9E75;"></span>新增件</span>
+          <span><span class="legend-dot" style="background:#378ADD;"></span>結案件</span>
+          <span><span class="legend-dot" style="background:#E24B4A;"></span>逾期件</span>
+        </div>
+        <div style="position:relative;width:100%;height:200px;">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">各館結案率</div>
+        <div style="margin-top:4px;">
+          <div class="prop-bar-row"><div class="prop-label">A館</div><div class="bar-bg"><div class="bar-fill" style="width:93%;background:#1D9E75;"></div></div><div class="prop-pct" style="color:#0F6E56;">93%</div></div>
+          <div class="prop-bar-row"><div class="prop-label">B館</div><div class="bar-bg"><div class="bar-fill" style="width:88%;background:#1D9E75;"></div></div><div class="prop-pct" style="color:#0F6E56;">88%</div></div>
+          <div class="prop-bar-row"><div class="prop-label">C館</div><div class="bar-bg"><div class="bar-fill" style="width:81%;background:#378ADD;"></div></div><div class="prop-pct" style="color:#185FA5;">81%</div></div>
+          <div class="prop-bar-row"><div class="prop-label">D館</div><div class="bar-bg"><div class="bar-fill" style="width:76%;background:#378ADD;"></div></div><div class="prop-pct" style="color:#185FA5;">76%</div></div>
+          <div class="prop-bar-row"><div class="prop-label">E館</div><div class="bar-bg"><div class="bar-fill" style="width:61%;background:#EF9F27;"></div></div><div class="prop-pct" style="color:#854F0B;">61%</div></div>
+          <div class="prop-bar-row"><div class="prop-label">F館</div><div class="bar-bg"><div class="bar-fill" style="width:48%;background:#E24B4A;"></div></div><div class="prop-pct" style="color:#A32D2D;">48%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom row -->
+    <div class="bottom-row">
+      <div class="card">
+        <div class="card-title">重點異常 · 需關注</div>
+        <div class="exc-row">
+          <div class="exc-dot" style="background:#E24B4A;"></div>
+          <div><div>F館空調設備老化</div><div class="exc-prop">F館 · 機電工程</div></div>
+          <div><span class="badge badge-red">逾期 14d</span></div>
+          <div style="font-size:12px;color:var(--color-text-secondary);">王工</div>
+        </div>
+        <div class="exc-row">
+          <div class="exc-dot" style="background:#EF9F27;"></div>
+          <div><div>E館消防系統年檢</div><div class="exc-prop">E館 · 消防安全</div></div>
+          <div><span class="badge badge-amber">待排程</span></div>
+          <div style="font-size:12px;color:var(--color-text-secondary);">李工</div>
+        </div>
+        <div class="exc-row">
+          <div class="exc-dot" style="background:#EF9F27;"></div>
+          <div><div>D館電梯定檢逾期</div><div class="exc-prop">D館 · 機電工程</div></div>
+          <div><span class="badge badge-amber">逾期 3d</span></div>
+          <div style="font-size:12px;color:var(--color-text-secondary);">陳工</div>
+        </div>
+        <div class="exc-row">
+          <div class="exc-dot" style="background:#639922;"></div>
+          <div><div>C館屋頂防水修繕</div><div class="exc-prop">C館 · 土木工程</div></div>
+          <div><span class="badge badge-green">進行中</span></div>
+          <div style="font-size:12px;color:var(--color-text-secondary);">張工</div>
+        </div>
+        <div class="exc-row">
+          <div class="exc-dot" style="background:#639922;"></div>
+          <div><div>B館大廳照明改善</div><div class="exc-prop">B館 · 電氣工程</div></div>
+          <div><span class="badge badge-green">結案</span></div>
+          <div style="font-size:12px;color:var(--color-text-secondary);">林工</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">KPI 指標燈號 · 本月</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;">
+            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">預防保養執行率</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span style="font-size:22px;font-weight:500;color:#0F6E56;">79%</span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#1D9E75;display:inline-block;"></span>
+            </div>
+          </div>
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;">
+            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">緊急工單回應時效</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span style="font-size:22px;font-weight:500;color:#854F0B;">68%</span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#EF9F27;display:inline-block;"></span>
+            </div>
+          </div>
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;">
+            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">外包驗收完成率</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span style="font-size:22px;font-weight:500;color:#0F6E56;">91%</span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#1D9E75;display:inline-block;"></span>
+            </div>
+          </div>
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;">
+            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">年度預算執行率</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span style="font-size:22px;font-weight:500;color:#A32D2D;">44%</span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#E24B4A;display:inline-block;"></span>
+            </div>
+          </div>
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;">
+            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">住客滿意度投訴率</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span style="font-size:22px;font-weight:500;color:#0F6E56;">1.2%</span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#1D9E75;display:inline-block;"></span>
+            </div>
+          </div>
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;">
+            <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;">工單平均結案天數</div>
+            <div style="display:flex;align-items:baseline;gap:6px;">
+              <span style="font-size:22px;font-weight:500;color:#854F0B;">5.8天</span>
+              <span style="width:9px;height:9px;border-radius:50%;background:#EF9F27;display:inline-block;"></span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;margin-top:12px;font-size:11px;color:var(--color-text-secondary);">
+          <span><span style="width:8px;height:8px;border-radius:50%;background:#1D9E75;display:inline-block;margin-right:4px;"></span>達標</span>
+          <span><span style="width:8px;height:8px;border-radius:50%;background:#EF9F27;display:inline-block;margin-right:4px;"></span>注意</span>
+          <span><span style="width:8px;height:8px;border-radius:50%;background:#E24B4A;display:inline-block;margin-right:4px;"></span>異常</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+document.getElementById('db-date').textContent = new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'long',day:'numeric'});
+
+const labels = ['10月','11月','12月','1月','2月','3月','4月'];
+new Chart(document.getElementById('trendChart'),{
+  type:'bar',
+  data:{
+    labels,
+    datasets:[
+      {label:'新增件',data:[31,27,24,29,26,22,23],backgroundColor:'rgba(29,158,117,.25)',borderColor:'#1D9E75',borderWidth:1.5,borderRadius:3},
+      {label:'結案件',data:[28,25,26,24,28,25,20],backgroundColor:'rgba(55,138,221,.2)',borderColor:'#378ADD',borderWidth:1.5,borderRadius:3},
+      {type:'line',label:'逾期件',data:[8,6,5,9,5,4,7],borderColor:'#E24B4A',backgroundColor:'rgba(226,75,74,.08)',pointBackgroundColor:'#E24B4A',pointRadius:4,tension:.35,borderWidth:2,yAxisID:'y2'}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{font:{size:11}},grid:{display:false}},
+      y:{position:'left',ticks:{font:{size:11}},grid:{color:'rgba(0,0,0,.05)'},title:{display:true,text:'件數',font:{size:10}}},
+      y2:{position:'right',ticks:{font:{size:11}},grid:{display:false},title:{display:true,text:'逾期',font:{size:10}},min:0,max:20}
+    }
+  }
+});
+
+document.querySelectorAll('.db-tab').forEach(t=>{
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.db-tab').forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');
+    if(this.textContent!=='本月總覽'){
+      const q={跨館比較:'比較各館今年度 KPI 表現與建議改善方向',工程追蹤:'整理目前工程追蹤中的待辦與逾期工項',月報管理:'說明月報管理的現況與改善建議'}[this.textContent];
+      if(q) sendPrompt(q);
+    }
+  });
+});
+</script>
